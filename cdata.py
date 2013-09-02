@@ -37,11 +37,11 @@ class CData:
         return float(bad_request_no)/request_no
 
     def _measure_state(self, appname):
-        state = 'rainbow'
+        state = 'euphoric'
         if self._hours_since_last_deployment(appname) > 24:
             state = 'happy'
         if self._errors_percentage(appname) > 0.1:
-            state = 'ill'
+            state = 'buggy'
 
         return state
 

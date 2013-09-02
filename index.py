@@ -16,4 +16,5 @@ def get_app_info(appname):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.debug = True
+    app.run(host='0.0.0.0', port=int(os.environ['PORT']))

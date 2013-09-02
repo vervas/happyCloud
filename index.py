@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, make_response, redirect, url_for, Response
 from cdata import CData
 import os
 
@@ -9,12 +9,27 @@ cd = CData()
 
 @app.route("/")
 def hello():
-    return "Welcome"
+    return "hello"
 
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        cd.create_token(username, password)
+        return redirect('/apps')
+    else:
+        return redirect(url_for('static', filename='login.html'))
+
+
+@app.route("/apps")
+def get_apps():
+    # return "apps"
+    return cd.get_apps()
 
 @app.route("/<appname>")
 def get_app_info(appname):
-    cd.create_token('at+happycloud@cloudcontrol.de', 'malaka')
     return cd.get_info(appname)
 
 

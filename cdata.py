@@ -2,6 +2,7 @@ from pycclib.cclib import *
 from datetime import datetime, timedelta
 import time
 import json
+from flask import Response
 
 
 class CData:
@@ -13,13 +14,13 @@ class CData:
         self.api.create_token(email, password)
 
     def get_apps(self):
-        return [i['name'] for i in self.api.read_apps()]
+        return Response(json.dumps([i['name'] for i in self.api.read_apps()]))
 
     def _has_default_dep(self, appname):
-        try:
-            return self.api.read_deployment(appname, 'default')
-        except:
-            return False
+       try:
+            return Response(json.dumps(self.api.read_deployment(appname, 'default')))
+       except:
+           return False
 
     def _hours_since_last_deployment(self, appname):
         current_time = time.mktime(time.localtime())
@@ -51,9 +52,9 @@ class CData:
         """
         info = self._has_default_dep(appname)
         if not info:
-            return json.dumps([{'state': 'comatose'}])
+            return Response(json.dumps([{'state': 'comatose'}]))
         else:
-            return json.dumps(
+            return Response(json.dumps(
                 [
                     {
                         'state': self._measure_state(appname),
@@ -65,4 +66,4 @@ class CData:
                         }
                     }
                 ]
-            )
+            ))

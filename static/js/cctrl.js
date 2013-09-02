@@ -1,24 +1,27 @@
 var cctrl = cctrl || {};
 cctrl.happycloud = cctrl.happycloud  || {};
 cctrl.happycloud.config = {
-       apiUrl: "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=",
-       serverErrorImage: "img/CloudWTF.jpeg"
+       imageUrl: "img/",
+//       apiUrl: "http://cloudcompanion.cloudcontrolled.com/",
+       apiUrl: "js/fixture/server_response.json",
+       serverErrorImage: "wtf"
 };
 
-cctrl.happycloud.init = function () {
-    $.getJSON(cctrl.happycloud.config.apiUrl, {
-        tags: "mount rainier",
-        tagmode: "any",
-        format: "json"
-    }).done(function (data) {
-            $.each(data.items, function (i, item) {
-                $("#cloudMood").attr("src", item.media.m);
-                return false;
-            });
+cctrl.happycloud.init = function (config, appName) {
+    var newImage = config.serverErrorImage;
+    $.getJSON(config.apiUrl + appName )
+        .done(function (data) {
+        $.each(data, function (i, item) {
+            newImage = item.state;
+            return false;
+        });
+
         }).fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ', ' + error;
-            $("#cloudMood").attr("src", cctrl.happycloud.config.serverErrorImage);
             console.log("Request Failed: " + err);
         });
+    var newImageUrl = config.imageUrl + "Cloud_"+newImage+".jpeg";
+    $("#cloudMood").attr("src", newImageUrl);
 }
-cctrl.happycloud.init();
+cctrl.happycloud.init(cctrl.happycloud.config, "");
+

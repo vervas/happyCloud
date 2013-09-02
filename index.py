@@ -14,7 +14,7 @@ def hello():
 
 @app.route("/<appname>")
 def get_app_info(appname):
-    cd.api.set_token('fn7tFd4ALwk2yYcnd9Tqqqn38TYG2S')
+    cd.create_token('at+happycloud@cloudcontrol.de', 'malaka')
     return cd.get_info(appname)
 
 

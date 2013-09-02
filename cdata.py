@@ -15,14 +15,17 @@ class CData:
         return [i['name'] for i in self.api.read_apps()]
 
     def _has_default_dep(self, appname):
-#        try:
-        info = self.api.read_deployment(appname, 'default')
-        import pdb; pdb.set_trace()
-        print info
-        return info
-#        except:
-#            return False
+       try:
+            return self.api.read_deployment(appname, 'default')
+       except:
+           return False
+
 
     def get_info(self, appname):
         state = ['happy', 'sad', 'rainbow', 'ill', 'comatose']
-        return json.dumps([{"status": state[randrange(len(state)-1)]}])
+        info = self._has_default_dep(appname)
+        print info
+        if not info:
+            return json.dumps(['comatose'])
+        else:
+            return json.dumps(state[randrange(len(state)-2)])

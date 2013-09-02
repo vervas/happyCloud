@@ -1,4 +1,5 @@
 from pycclib.cclib import *
+import time
 import json
 
 
@@ -26,15 +27,15 @@ class CData:
 
     def _errors_percentage(self, appname, period=None):
         request_no = len(self.api.read_log(appname, 'default', 'access', last_time=period))
-        bad_request_no = len([i['status'] for i in api.read_log('rainbowapp','default','access') if int(i['status'])>399])
+        bad_request_no = len([i['status'] for i in self.api.read_log('rainbowapp','default','access') if int(i['status'])>399])
 
         return float(bad_request_no)/request_no
 
     def _measure_state(self, appname):
         state = 'rainbow'
-        if _hours_since_last_deployment(appname) > 24:
+        if self._hours_since_last_deployment(appname) > 24:
             state = 'happy'
-        if _errors_percentage(appname) > 0.1:
+        if self._errors_percentage(appname) > 0.1:
             state = 'ill'
 
         return state
@@ -47,4 +48,4 @@ class CData:
         if not info:
             return json.dumps([{'state': 'comatose'}])
         else:
-            return json.dumps([{'state': _measure_state}])
+            return json.dumps([{'state': self._measure_state(appname)}])

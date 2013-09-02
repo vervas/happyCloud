@@ -25,13 +25,4 @@ class CData:
 
     def get_info(self, appname):
         state = ['happy', 'sad', 'rainbow', 'ill', 'comatose']
-        info = self._has_default_dep(appname)
-        print info
-        if not info:
-            return json.dumps(['comatose'])
-        else:
-            return json.dumps(state[randrange(len(state)-2)])
-
-    def get_face(self, face):
-        return json.dumps([{"status":face}])
-
+        return json.dumps([{"status": state[randrange(len(state)-1)]}])

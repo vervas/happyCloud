@@ -33,5 +33,5 @@ class CData:
             return json.dumps(state[randrange(len(state)-2)])
 
     def get_face(self, face):
-        return json.dumps([face])
+        return json.dumps([{"status":face}])
 

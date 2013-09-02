@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, redirect, url_for, Response
+from flask import Flask, request, make_response, redirect, url_for, Response, render_template
 from cdata import CData
 import os
 
@@ -25,8 +25,8 @@ def login():
 
 @app.route("/apps")
 def get_apps():
-    # return "apps"
-    return cd.get_apps()
+    apps = cd.get_apps()
+    return render_template("apps.html", apps=apps)
 
 @app.route("/<appname>")
 def get_app_info(appname):

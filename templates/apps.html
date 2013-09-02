@@ -1,0 +1,7 @@
+<h1>App list</h1>
+
+{% for app in apps %}
+	<ul>
+		<li><a href="/{{ app }}">{{app}}</a></li>
+	</ul>
+	{% endfor %}

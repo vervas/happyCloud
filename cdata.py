@@ -14,11 +14,11 @@ class CData:
         self.api.create_token(email, password)
 
     def get_apps(self):
-        return Response(json.dumps([i['name'] for i in self.api.read_apps()]))
+        return [i['name'] for i in self.api.read_apps()]
 
     def _has_default_dep(self, appname):
        try:
-            return Response(json.dumps(self.api.read_deployment(appname, 'default')))
+            return json.dumps(self.api.read_deployment(appname, 'default'))
        except:
            return False
 

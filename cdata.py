@@ -1,5 +1,4 @@
 from pycclib.cclib import *
-from random import randrange
 import json
 
 
@@ -15,17 +14,37 @@ class CData:
         return [i['name'] for i in self.api.read_apps()]
 
     def _has_default_dep(self, appname):
-       try:
+        try:
             return self.api.read_deployment(appname, 'default')
-       except:
-           return False
+        except:
+            return False
 
+    def _hours_since_last_deployment(self, appname):
+        current_time = time.mktime(time.localtime())
+        last_deploy = self.api.read_log(appname, 'default', 'deploy')[-1]['time']
+        return int((current_time - last_deploy) / 60 / 60)
+
+    def _errors_percentage(self, appname, period=None):
+        request_no = len(self.api.read_log(appname, 'default', 'access', last_time=period))
+        bad_request_no = len([i['status'] for i in api.read_log('rainbowapp','default','access') if int(i['status'])>399])
+
+        return float(bad_request_no)/request_no
+
+    def _measure_state(self, appname):
+        state = 'rainbow'
+        if _hours_since_last_deployment(appname) > 24:
+            state = 'happy'
+        if _errors_percentage(appname) > 0.1:
+            state = 'ill'
+
+        return state
 
     def get_info(self, appname):
-        state = ['happy', 'sad', 'rainbow', 'ill', 'comatose']
+        """
+            state = ['happy', 'sad', 'rainbow', 'ill', 'comatose']
+        """
         info = self._has_default_dep(appname)
-        print info
         if not info:
             return json.dumps([{'state': 'comatose'}])
         else:
-            return json.dumps([{'state': state[randrange(len(state)-2)]}])
+            return json.dumps([{'state': _measure_state}])

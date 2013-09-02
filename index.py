@@ -9,7 +9,7 @@ cd = CData()
 
 @app.route("/")
 def hello():
-    return "hello"
+    return render_template('index.html')
 
 
 @app.route("/login", methods=['GET', 'POST'])

@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response, redirect, url_for, Response
+from flask import render_template
 from cdata import CData
 import os
 
@@ -9,7 +10,7 @@ cd = CData()
 
 @app.route("/")
 def hello():
-    return "hello"
+    return render_template('index.html')
 
 
 @app.route("/login", methods=['GET', 'POST'])

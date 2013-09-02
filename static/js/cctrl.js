@@ -13,7 +13,9 @@ cctrl.happycloud.updateImage= function (config, newImage) {
 } ;
 
 cctrl.happycloud.init = function (config, appName) {
-    $.getJSON(config.apiUrl + appName )
+    var api_url = config.apiUrl + appName;
+    console.log("Api call to: " + api_url);
+    $.getJSON(api_url )
         .done(function (data) {
             var newImage = data[0].state;
             console.log("Request ok: new image: " + newImage);
@@ -26,5 +28,12 @@ cctrl.happycloud.init = function (config, appName) {
 
 };
 
-cctrl.happycloud.init(cctrl.happycloud.config, "a");
+cctrl.happycloud.getParameterByName = function(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+cctrl.happycloud.init(cctrl.happycloud.config, cctrl.happycloud.getParameterByName("name"));
 

@@ -26,6 +26,6 @@ class CData:
         info = self._has_default_dep(appname)
         print info
         if not info:
-            return json.dumps(['comatose'])
+            return json.dumps([{'state': 'comatose'}])
         else:
-            return json.dumps(state[randrange(len(state)-2)])
+            return json.dumps([{'state': state[randrange(len(state)-2)]}])

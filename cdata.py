@@ -33,7 +33,7 @@ class CData:
 
     def _errors_percentage(self, appname):
         request_no = self._request_number(appname)
-        bad_request_no = len([i['status'] for i in self.api.read_log('rainbowapp','default','access') if int(i['status'])>399])
+        bad_request_no = len([i['status'] for i in self.api.read_log(appname,'default','access') if int(i['status'])>399])
 
         return float(bad_request_no)/request_no
 

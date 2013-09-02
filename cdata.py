@@ -1,4 +1,5 @@
 from pycclib.cclib import *
+from datetime import datetime, timedelta
 import time
 import json
 
@@ -25,8 +26,12 @@ class CData:
         last_deploy = self.api.read_log(appname, 'default', 'deploy')[-1]['time']
         return int((current_time - last_deploy) / 60 / 60)
 
-    def _errors_percentage(self, appname, period=None):
-        request_no = len(self.api.read_log(appname, 'default', 'access', last_time=period))
+    def _request_number(self, appname, hours=24):
+        period = datetime.today()-timedelta(hours=hours)
+        return len(self.api.read_log(appname, 'default', 'access', last_time=period))
+
+    def _errors_percentage(self, appname):
+        request_no = self._request_number(appname)
         bad_request_no = len([i['status'] for i in self.api.read_log('rainbowapp','default','access') if int(i['status'])>399])
 
         return float(bad_request_no)/request_no
@@ -48,4 +53,16 @@ class CData:
         if not info:
             return json.dumps([{'state': 'comatose'}])
         else:
-            return json.dumps([{'state': self._measure_state(appname)}])
+            return json.dumps(
+                [
+                    {
+                        'state': self._measure_state(appname),
+                        'data': {
+                            'hours_since_last_dep': self._hours_since_last_deployment(appname),
+                            'error_percentage': self._errors_percentage(appname),
+                            'requests_last_24': self._request_number(appname),
+                            'requests_last_48': self._request_number(appname,48)
+                        }
+                    }
+                ]
+            )
